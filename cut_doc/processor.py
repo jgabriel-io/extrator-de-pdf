@@ -24,8 +24,7 @@ def sanitize_name_for_filename(name):
 
 def _zip_work_dir(work_dir, output_folder, zip_filename_base):
     """Zips the contents of the working directory and places it in the output folder."""
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M")
-    zip_filename = f"{zip_filename_base}-{timestamp}.zip"
+    zip_filename = f"{zip_filename_base}-certificados.zip"
     zip_filepath = os.path.join(output_folder, zip_filename)
 
     with zipfile.ZipFile(zip_filepath, 'w', zipfile.ZIP_DEFLATED) as zipf:
