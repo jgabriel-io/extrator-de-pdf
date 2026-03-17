@@ -11,7 +11,7 @@ O projeto foi criado para otimizar a tarefa de separar certificados de conclusã
 - Salva cada página encontrada como um arquivo PNG de alta resolução (300 DPI).
 - Salva cada página encontrada como um arquivo PDF separado (opcional).
 - Agrupa todos os arquivos gerados em um único arquivo `.zip` para fácil distribuição.
-- Nome do arquivo ZIP sanitizado e com timestamp (Ex: `Nome-Sobrenome-20260317_1030.zip`).
+- Nome do arquivo ZIP sanitizado (Ex: `NomePessoa-certificados.zip`).
 - Limpa automaticamente os arquivos temporários após a criação do ZIP.
 
 ## Requisitos
