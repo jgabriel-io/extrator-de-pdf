@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cut-Doc</title>
+  <style>
+    :root {
+      --bg: #0f0f13;
+      --surface: #1a1a24;
+      --border: #2a2a38;
+      --accent: #6c63ff;
+      --accent-hover: #5a52e0;
+      --text: #e8e8f0;
+      --muted: #7a7a9a;
+      --success: #22c55e;
+      --error: #ef4444;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2.5rem;
+      width: 100%;
+      max-width: 460px;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+      margin-bottom: 2rem;
+    }
+
+    .logo-icon {
+      width: 40px;
+      height: 40px;
+      background: var(--accent);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+    }
+
+    .logo h1 { font-size: 1.25rem; font-weight: 700; }
+    .logo p { font-size: .8rem; color: var(--muted); margin-top: 1px; }
+
+    .field { margin-bottom: 1.25rem; }
+
+    label {
+      display: block;
+      font-size: .8rem;
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      margin-bottom: .5rem;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: .75rem 1rem;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-size: .95rem;
+      outline: none;
+      transition: border-color .2s;
+    }
+
+    input[type="text"]:focus { border-color: var(--accent); }
+    input[type="text"]::placeholder { color: var(--muted); }
+
+    /* Drop zone */
+    .dropzone {
+      border: 2px dashed var(--border);
+      border-radius: 8px;
+      padding: 2rem 1rem;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color .2s, background .2s;
+      position: relative;
+    }
+
+    .dropzone:hover, .dropzone.drag { border-color: var(--accent); background: rgba(108,99,255,.05); }
+    .dropzone input { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
+
+    .dropzone-icon { font-size: 2rem; margin-bottom: .5rem; }
+    .dropzone-text { font-size: .9rem; color: var(--muted); }
+    .dropzone-text span { color: var(--accent); font-weight: 600; }
+    .dropzone-file { font-size: .85rem; color: var(--success); margin-top: .4rem; font-weight: 500; }
+
+    /* Toggle */
+    .toggle-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: .75rem 1rem;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin-bottom: 1.5rem;
+      cursor: pointer;
+    }
+
+    .toggle-label { font-size: .9rem; color: var(--text); }
+    .toggle-label small { display: block; font-size: .75rem; color: var(--muted); margin-top: 2px; }
+
+    .desc {
+      font-size: .875rem;
+      color: var(--muted);
+      line-height: 1.6;
+      margin-bottom: 1.75rem;
+      padding-bottom: 1.75rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .toggle {
+      width: 40px; height: 22px;
+      background: var(--border);
+      border-radius: 99px;
+      position: relative;
+      transition: background .2s;
+      flex-shrink: 0;
+    }
+
+    .toggle::after {
+      content: '';
+      position: absolute;
+      width: 16px; height: 16px;
+      background: #fff;
+      border-radius: 50%;
+      top: 3px; left: 3px;
+      transition: transform .2s;
+    }
+
+    .toggle.on { background: var(--accent); }
+    .toggle.on::after { transform: translateX(18px); }
+
+    /* Button */
+    button {
+      width: 100%;
+      padding: .85rem;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: .95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background .2s, opacity .2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: .5rem;
+    }
+
+    button:hover:not(:disabled) { background: var(--accent-hover); }
+    button:disabled { opacity: .5; cursor: not-allowed; }
+
+    /* Status */
+    #status {
+      margin-top: 1rem;
+      font-size: .875rem;
+      text-align: center;
+      min-height: 1.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: .4rem;
+    }
+
+    .error { color: var(--error); }
+    .success { color: var(--success); }
+    .loading { color: var(--muted); }
+
+    /* Spinner */
+    .spinner {
+      width: 16px; height: 16px;
+      border: 2px solid rgba(255,255,255,.3);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin .7s linear infinite;
+      display: none;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="logo">
+      <div class="logo-icon">✂️</div>
+      <div>
+        <h1>Cut-Doc</h1>
+        <p>Extrator de páginas PDF</p>
+      </div>
+    </div>
+
+    <p class="desc">Criado para extrair certificados de atividades da faculdade: a FEPI envia um único PDF com os certificados de todos os alunos, e essa ferramenta encontra e separa apenas as páginas com o seu nome.</p>
+
+    <div class="field">
+      <label>Arquivo PDF</label>
+      <div class="dropzone" id="dropzone">
+        <input type="file" id="pdf" accept=".pdf" onchange="onFileChange(this)">
+        <div class="dropzone-icon">📄</div>
+        <div class="dropzone-text"><span>Clique para selecionar</span> ou arraste aqui</div>
+        <div class="dropzone-file" id="filename"></div>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Nome / texto a buscar</label>
+      <input type="text" id="name" placeholder="Ex: João da Silva">
+    </div>
+
+    <div class="toggle-row" onclick="togglePdf()">
+      <div class="toggle-label">
+        Incluir PDF individual no ZIP
+        <small>Além das imagens PNG</small>
+      </div>
+      <div class="toggle on" id="toggle"></div>
+    </div>
+
+    <button id="btn" onclick="run()">
+      <div class="spinner" id="spinner"></div>
+      <span id="btn-text">Processar e baixar ZIP</span>
+    </button>
+
+    <div id="status"></div>
+  </div>
+
+  <script>
+    let savePdf = true;
+
+    function togglePdf() {
+      savePdf = !savePdf;
+      document.getElementById("toggle").className = "toggle" + (savePdf ? " on" : "");
+    }
+
+    function onFileChange(input) {
+      const f = input.files[0];
+      document.getElementById("filename").textContent = f ? f.name : "";
+    }
+
+    // Drag & drop visual feedback
+    const dz = document.getElementById("dropzone");
+    dz.addEventListener("dragover", e => { e.preventDefault(); dz.classList.add("drag"); });
+    dz.addEventListener("dragleave", () => dz.classList.remove("drag"));
+    dz.addEventListener("drop", e => {
+      e.preventDefault();
+      dz.classList.remove("drag");
+      const f = e.dataTransfer.files[0];
+      if (f) {
+        document.getElementById("pdf").files = e.dataTransfer.files;
+        document.getElementById("filename").textContent = f.name;
+      }
+    });
+
+    async function run() {
+      const pdf = document.getElementById("pdf").files[0];
+      const name = document.getElementById("name").value.trim();
+
+      if (!pdf) return setStatus("Selecione um arquivo PDF.", "error");
+      if (!name) return setStatus("Informe o nome/texto a buscar.", "error");
+
+      const form = new FormData();
+      form.append("pdf", pdf);
+      form.append("name", name);
+      form.append("save_pdf", savePdf);
+
+      setLoading(true);
+      setStatus("Processando…", "loading");
+
+      try {
+        const res = await fetch("/process", { method: "POST", body: form });
+
+        if (!res.ok) {
+          const data = await res.json();
+          return setStatus(data.error, "error");
+        }
+
+        const blob = await res.blob();
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        const disposition = res.headers.get("Content-Disposition") || "";
+        const match = disposition.match(/filename\*?=(?:UTF-8''|")?([^";\n]+)"?/i);
+        a.download = match ? decodeURIComponent(match[1]) : "certificados.zip";
+        a.click();
+        URL.revokeObjectURL(url);
+        setStatus("✓ Download iniciado!", "success");
+      } catch (err) {
+        setStatus("Erro inesperado: " + err.message, "error");
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    function setLoading(on) {
+      document.getElementById("btn").disabled = on;
+      document.getElementById("spinner").style.display = on ? "block" : "none";
+      document.getElementById("btn-text").textContent = on ? "Processando…" : "Processar e baixar ZIP";
+    }
+
+    function setStatus(msg, cls) {
+      const el = document.getElementById("status");
+      el.textContent = msg;
+      el.className = cls;
+    }
+  </script>
+</body>
+</html>

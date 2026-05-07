@@ -1,9 +1,10 @@
 ﻿# Python
 __pycache__/
 *.pyc
+*.pyo
 
 # Environment
 .venv/
 
-# User data and outputs
-out/
+# IDE
+.vscode/

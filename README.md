@@ -1,72 +1,47 @@
-# Cut-Doc: Extrator de Páginas de PDF
+# Cut-Doc
 
-`cut-doc` é uma ferramenta de linha de comando para automatizar a busca de nomes em múltiplos arquivos PDF e extrair as páginas correspondentes. Ele é especialmente útil para processar grandes lotes de documentos, como certificados ou relatórios, e salvar as páginas relevantes em formatos PNG e PDF individuais, agrupados em um arquivo ZIP.
+Ferramenta web para buscar um nome em um arquivo PDF e extrair as páginas onde ele aparece, empacotadas em um ZIP com PNG e PDF individual.
 
-O projeto foi criado para otimizar a tarefa de separar certificados de conclusão de curso da FEPI.
+Criada para separar certificados da FEPI, que envia um único PDF com os certificados de todos os alunos.
 
 ## Funcionalidades
 
-- Varre um diretório de arquivos PDF.
-- Procura por um nome específico em cada página.
-- Salva cada página encontrada como um arquivo PNG de alta resolução (300 DPI).
-- Salva cada página encontrada como um arquivo PDF separado (opcional).
-- Agrupa todos os arquivos gerados em um único arquivo `.zip` para fácil distribuição.
-- Nome do arquivo ZIP sanitizado (Ex: `NomePessoa-certificados.zip`).
-- Limpa automaticamente os arquivos temporários após a criação do ZIP.
-
-## Requisitos
-
-- Python 3.7+
-- `PyMuPDF`
+- Busca com fallback inteligente: busca exata → case-insensitive → normalização de acentos
+- Extrai cada página encontrada como PNG (300 DPI) e PDF individual (opcional)
+- Retorna tudo em um único `.zip`
 
 ## Instalação
 
-1.  **Clone o repositório:**
+1. Clone o repositório:
     ```bash
     git clone https://github.com/jgabriel-io/extrator-de-pdf.git
     cd extrator-de-pdf
     ```
 
-2.  **Crie e ative um ambiente virtual:**
-    ```powershell
-    # Criar o ambiente virtual
+2. Crie e ative um ambiente virtual:
+    ```bash
     python -m venv .venv
-
-    # Ativar o ambiente virtual
-    .\.venv\Scripts\Activate.ps1
+    .\.venv\Scripts\Activate.ps1  # Windows
+    source .venv/bin/activate      # Linux/macOS
     ```
 
-3.  **Instale as dependências:**
-    ```powershell
-    pip install pymupdf
+3. Instale as dependências:
+    ```bash
+    pip install -r requirements.txt
     ```
 
-## Como Usar
+## Uso local
 
-1.  Coloque todos os arquivos PDF que você deseja processar na pasta `pdf/` (ou crie-a se não existir).
-
-2.  Execute o script `run.py` a partir do seu terminal, passando o nome que você deseja procurar como argumento.
-
-    **Exemplo Básico:**
-    ```powershell
-    python run.py "João da Silva"
-    ```
-
-3.  Os arquivos de saída serão salvos em um arquivo ZIP dentro da pasta `out/`.
-
-### Opções Avançadas
-
-Você pode personalizar as pastas de entrada e saída e outras opções através de flags:
-
--   `--pdf-folder`: Especifica a pasta onde os PDFs estão localizados. (Padrão: `pdf`)
--   `--output-folder`: Especifica a pasta para salvar o ZIP final. (Padrão: `out`)
--   `--no-pdf`: Impede que os arquivos PDF individuais sejam salvos no ZIP, incluindo apenas os PNGs.
-
-**Exemplo com flags:**
-```powershell
-python run.py "Maria Oliveira" --pdf-folder "C:\Users\seu_usuario\Documentos\Certificados" --output-folder "C:\Saidas" --no-pdf
+```bash
+gunicorn web_app:app
 ```
+
+Acesse `http://localhost:8000`, suba o PDF, informe o nome e baixe o ZIP.
+
+## Deploy
+
+O projeto inclui um `Procfile` pronto para Render, Railway e Heroku. Basta conectar o repositório e fazer o deploy — a plataforma detecta o `Procfile` automaticamente.
 
 ## Licença
 
-Este projeto está licenciado sob a Licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
+MIT — veja o arquivo [LICENSE](LICENSE).
