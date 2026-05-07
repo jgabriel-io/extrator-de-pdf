@@ -4,13 +4,15 @@ Ferramenta web para buscar um nome em um arquivo PDF e extrair as páginas onde 
 
 Criada para separar certificados da FEPI, que envia um único PDF com os certificados de todos os alunos.
 
+🔗 **[cut-doc-extrator-de-pdf.onrender.com](https://cut-doc-extrator-de-pdf.onrender.com)**
+
 ## Funcionalidades
 
 - Busca com fallback inteligente: busca exata → case-insensitive → normalização de acentos
 - Extrai cada página encontrada como PNG (300 DPI) e PDF individual (opcional)
 - Retorna tudo em um único `.zip`
 
-## Instalação
+## Uso local
 
 1. Clone o repositório:
     ```bash
@@ -30,17 +32,12 @@ Criada para separar certificados da FEPI, que envia um único PDF com os certifi
     pip install -r requirements.txt
     ```
 
-## Uso local
+4. Inicie o servidor:
+    ```bash
+    gunicorn web_app:app
+    ```
 
-```bash
-gunicorn web_app:app
-```
-
-Acesse `http://localhost:8000`, suba o PDF, informe o nome e baixe o ZIP.
-
-## Deploy
-
-O projeto inclui um `Procfile` pronto para Render, Railway e Heroku. Basta conectar o repositório e fazer o deploy — a plataforma detecta o `Procfile` automaticamente.
+Acesse `http://localhost:8000`.
 
 ## Licença
 

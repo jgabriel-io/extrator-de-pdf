@@ -202,6 +202,24 @@
     }
 
     @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Footer */
+    .footer {
+      margin-top: 1.5rem;
+      text-align: center;
+      font-size: .8rem;
+      color: var(--muted);
+    }
+
+    .footer a {
+      color: var(--muted);
+      text-decoration: none;
+      transition: color .2s;
+    }
+
+    .footer a:hover { color: var(--text); }
+
+    .footer span { margin: 0 .4rem; }
   </style>
 </head>
 <body>
@@ -246,6 +264,12 @@
 
     <div id="status"></div>
   </div>
+
+  <footer class="footer">
+    <a href="https://jgbriel.dev" target="_blank" rel="noopener">jgbriel.dev</a>
+    <span>·</span>
+    <a href="https://github.com/jgbriel-io" target="_blank" rel="noopener">GitHub</a>
+  </footer>
 
   <script>
     let savePdf = true;
